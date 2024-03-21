@@ -6,7 +6,7 @@ namespace LLVGFJCOJDMR.Models
     public class User
     {
 
-        public byte[] Image { get; set; }
+        public byte[]? Image { get; set; }
         [Key]
         public int Id { get; set; }
         public int RolId { get; set; }

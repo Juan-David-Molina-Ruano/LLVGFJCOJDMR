@@ -19,9 +19,6 @@
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
@@ -36,21 +33,37 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
-            </td>
+                <td>
+                    @{
+                        string urlBase64 = "";
+                        if (item.Image != null && item.Image.Length > 0)
+                        {
+                            string base64String = Convert.ToBase64String(item.Image);
+                            urlBase64 = "data:image/jpeg;base64," + base64String;
+                            <img src="@urlBase64" width="80px" />
+                        }
+                        else
+                        {
+                            <img src="~/img/default.jpg" width="80px" />
+                        }
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        @Html.Raw("Activo")
+                    }
+                    else
+                    {
+                        @Html.Raw("Inactivo")
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Rol.Description)
             </td>

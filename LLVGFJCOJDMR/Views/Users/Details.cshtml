@@ -13,20 +13,29 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Image)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
+        <dd class="col-sm-10">
+            @{
+                string urlBase64 = "";
+                if (Model.Image != null && Model.Image.Length > 0)
+                {
+                    string base64String = Convert.ToBase64String(Model.Image);
+                    urlBase64 = "data:image/jpeg;base64," + base64String;
+                }
+            }
+            @if (urlBase64.Trim().Length > 0)
+            {
+                <img id="imagenPrevia" src="@urlBase64" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+            }
+            else
+            {
+                <img id="imagenPrevia" src="~/img/default.jpg" alt="Vista previa de la imagen" style="max-width: 200px; max-height: 200px;">
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UserName)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
@@ -37,8 +46,15 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+        <dd class="col-sm-10">
+            @if (Model.Status == 1)
+            {
+                @Html.Raw("Activo")
+            }
+            else
+            {
+                @Html.Raw("Inactivo")
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rol)
