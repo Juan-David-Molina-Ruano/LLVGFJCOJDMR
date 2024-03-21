@@ -21,9 +21,9 @@ namespace LLVGFJCOJDMR.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-              return _context.Customers != null ? 
-                          View(await _context.Customers.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
+            return _context.Customers != null ?
+                        View(await _context.Customers.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
         }
 
         // GET: Customers/Details/5
@@ -35,19 +35,28 @@ namespace LLVGFJCOJDMR.Controllers
             }
 
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+              .Include(s => s.PhoneNumbers)
+              .FirstAsync(s => s.Id == id);
             if (customer == null)
             {
                 return NotFound();
             }
-
+            ViewBag.Accion = "Details";
             return View(customer);
         }
 
         // GET: Customers/Create
         public IActionResult Create()
         {
-            return View();
+            var customer = new Customer();
+            customer.PhoneNumbers = new List<PhoneNumber>();
+            customer.PhoneNumbers.Add(new PhoneNumber
+            {
+                NumberPhone = "",
+                Note = ""
+            });
+            ViewBag.Accion = "Create";
+            return View(customer);
         }
 
         // POST: Customers/Create
@@ -55,16 +64,41 @@ namespace LLVGFJCOJDMR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,PhoneNumbers")] Customer customer)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customer);
+            _context.Add(customer);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
+        #region Detalles
+        public ActionResult AgregarDetalles([Bind("Id,FirstName,LastName,Email,PhoneNumbers")] Customer customer, string accion)
+        {
+            customer.PhoneNumbers.Add(new PhoneNumber
+            {
+                NumberPhone = "",
+                Note = ""
+            });
+            ViewBag.Accion = accion;
+            return View(accion, customer);
+        }
+
+        public ActionResult EliminarDetalles([Bind("Id,FirstName,LastName,Email,PhoneNumbers")] Customer customer, string accion, int index)
+        {
+            var det = customer.PhoneNumbers[index];
+            if (accion == "Edit" && det.Id > 0)
+            {
+                det.Id = det.Id * -1;
+            }
+            else
+            {
+                customer.PhoneNumbers.RemoveAt(index);
+            }
+
+            ViewBag.Accion = accion;
+            return View(accion, customer);
+        }
+        #endregion
 
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -74,11 +108,14 @@ namespace LLVGFJCOJDMR.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers
+              .Include(s => s.PhoneNumbers)
+              .FirstAsync(s => s.Id == id);
             if (customer == null)
             {
                 return NotFound();
             }
+            ViewBag.Accion = "Edit";
             return View(customer);
         }
 
@@ -87,34 +124,66 @@ namespace LLVGFJCOJDMR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumbers")] Customer customer)
         {
             if (id != customer.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // Obtener los datos de la base de datos que van a ser modificados
+                var customerUpdate = await _context.Customers
+                        .Include(s => s.PhoneNumbers)
+                        .FirstAsync(s => s.Id == customer.Id);
+                customerUpdate.FirstName = customer.FirstName;
+                customerUpdate.LastName = customer.LastName;
+                customerUpdate.Email = customer.Email;
+
+                // Obtener todos los detalles que seran nuevos y agregarlos a la base de datos
+                var detNew = customer.PhoneNumbers.Where(s => s.Id == 0);
+                foreach (var d in detNew)
                 {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    customerUpdate.PhoneNumbers.Add(d);
                 }
-                catch (DbUpdateConcurrencyException)
+                // Obtener todos los detalles que seran modificados y actualizar a la base de datos
+                var detUpdate = customer.PhoneNumbers.Where(s => s.Id > 0);
+                foreach (var d in detUpdate)
                 {
-                    if (!CustomerExists(customer.Id))
+                    var det = customerUpdate.PhoneNumbers.FirstOrDefault(s => s.Id == d.Id);
+                    det.NumberPhone = d.NumberPhone;
+                    det.Note = d.Note;
+                }
+                // Obtener todos los detalles que seran eliminados y actualizar a la base de datos
+                var delDetIds = customer.PhoneNumbers.Where(s => s.Id < 0).Select(s => -s.Id).ToList();
+                if (delDetIds != null && delDetIds.Count > 0)
+                {
+                    foreach (var detalleId in delDetIds) // Cambiado de 'id' a 'detalleId'
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        var det = await _context.PhoneNumbers.FindAsync(detalleId); // Cambiado de 'id' a 'detalleId'
+                        if (det != null)
+                        {
+                            _context.PhoneNumbers.Remove(det);
+                        }
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                // Aplicar esos cambios a la base de datos
+                _context.Update(customerUpdate);
+                await _context.SaveChangesAsync();
             }
-            return View(customer);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(customer.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Customers/Delete/5
@@ -149,14 +218,14 @@ namespace LLVGFJCOJDMR.Controllers
             {
                 _context.Customers.Remove(customer);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CustomerExists(int id)
         {
-          return (_context.Customers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Customers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
