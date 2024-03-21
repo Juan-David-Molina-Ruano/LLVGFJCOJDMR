@@ -1,0 +1,91 @@
+﻿﻿@{
+    Layout = null;
+}
+@model IEnumerable<PhoneNumber>
+<input type="hidden" name="accion" value="@ViewBag.Accion" />
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<table class="table table-secondary table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th>
+                @if (ViewBag.Accion == "Create" || ViewBag.Accion == "Edit")
+                {
+                    <button type="submit" class="btn btn-primary" formaction="@Url.Action("AgregarDetalles")">Agregar</button>
+                }
+
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @{
+            int index = -1;
+        }
+        @if (Model != null && Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                index++;
+                // var hidde = "table";
+                if (item.Id > -1)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" value="@item.Id" name="PhoneNumbers[@index].Id">
+                            <input type="hidden" value="@item.CustomerId" name="PhoneNumbers[@index].CustomerId">
+                            <input class="form-control" data-readonly type="text" name="PhoneNumbers[@index].NumberPhone" value="@item.NumberPhone">
+                            <span asp-validation-for="PhoneNumbers[@index].NumberPhone" class="text-danger"></span>
+
+                        </td>
+                        <td>
+                            <input class="form-control" data-readonly type="text" name="PhoneNumbers[@index].Note" value="@item.Note">
+                            <span asp-validation-for="PhoneNumbers[@index].Note" class="text-danger"></span>
+
+                        </td>
+                        <td>
+                            @if (ViewBag.Accion == "Create" || ViewBag.Accion == "Edit")
+                            {
+                                <button name="index" value="@index" class="btn btn-primary" type="submit" formaction="@Url.Action("EliminarDetalles")">Eliminar</button>
+                            }
+
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr style="display:none">
+                        <td>
+                            <input type="hidden" value="@item.Id" name="PhoneNumbers[@index].Id">
+                            <input type="hidden" value="@item.CustomerId" name="PhoneNumbers[@index].CustomerId">
+                            <input type="hidden" name="PhoneNumbers[@index].NumberPhone" value="@item.NumberPhone">
+                            <input type="hidden" name="PhoneNumbers[@index].Note" value="@item.Note">
+                        </td>
+                    </tr>
+                }
+            }
+        }
+
+    </tbody>
+</table>
+
+@if (ViewBag.Accion == "Details" || ViewBag.Accion == "Delete")
+{
+    <script>
+        const readOnly = document.querySelectorAll("*[data-readonly]");
+        for (var i = 0; i < readOnly.length; i++) {
+            const item = readOnly[i];
+            item.setAttribute("readonly", true);
+        }
+
+    </script>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
