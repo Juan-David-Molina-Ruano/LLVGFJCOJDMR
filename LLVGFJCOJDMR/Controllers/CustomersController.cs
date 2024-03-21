@@ -195,12 +195,13 @@ namespace LLVGFJCOJDMR.Controllers
             }
 
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+              .Include(s => s.PhoneNumbers)
+              .FirstAsync(s => s.Id == id);
             if (customer == null)
             {
                 return NotFound();
             }
-
+            ViewBag.Accion = "Delete";
             return View(customer);
         }
 
