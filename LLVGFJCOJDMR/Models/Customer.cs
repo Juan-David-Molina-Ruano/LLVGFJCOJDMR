@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 using System.Timers;
 
@@ -30,6 +31,9 @@ namespace LLVGFJCOJDMR.Models
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [EmailAddress(ErrorMessage = "El campo {0} no es una dirección de correo válida")]
         public string Email { get; set; }
+
+        [NotMapped]//propiedadad para filtro
+        public int Take { get; set; }
 
     }
 }
