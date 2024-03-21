@@ -9,6 +9,9 @@ namespace LLVGFJCOJDMR.Models
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<PhoneNumber> PhoneNumbers { get; set; }
+        public DbSet<Rol> Rols { get; set; }
+        public DbSet<User> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
