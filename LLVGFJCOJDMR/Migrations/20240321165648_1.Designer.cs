@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LLVGFJCOJDMR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240321155843_uno")]
-    partial class uno
+    [Migration("20240321165648_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,8 +26,11 @@ namespace LLVGFJCOJDMR.Migrations
 
             modelBuilder.Entity("LLVGFJCOJDMR.Models.Customer", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -60,10 +63,6 @@ namespace LLVGFJCOJDMR.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CustomerId1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -76,7 +75,7 @@ namespace LLVGFJCOJDMR.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("PhoneNumbers");
                 });
@@ -143,7 +142,7 @@ namespace LLVGFJCOJDMR.Migrations
                 {
                     b.HasOne("LLVGFJCOJDMR.Models.Customer", "Customer")
                         .WithMany("PhoneNumbers")
-                        .HasForeignKey("CustomerId1")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
