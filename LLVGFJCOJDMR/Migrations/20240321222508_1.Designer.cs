@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LLVGFJCOJDMR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240321165648_1")]
+    [Migration("20240321222508_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,7 +114,6 @@ namespace LLVGFJCOJDMR.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Password")
