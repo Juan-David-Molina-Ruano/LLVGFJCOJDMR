@@ -392,7 +392,7 @@ namespace LLVGFJCOJDMR.Controllers
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Name", user.RolId);
+
             return View(user);
         }
 
@@ -402,81 +402,16 @@ namespace LLVGFJCOJDMR.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,RolId,UserName,Password,Email,Status")] User user, IFormFile? Image)
+        public async Task<IActionResult> Contrasena(int id, [Bind("Id,Password")] User user)
         {
             if (id != user.Id)
             {
                 return NotFound();
             }
 
-            var errors = new List<string>();
-
             try
             {
-
-                int Mb_1 = 1048576;
-                if (Image != null && Image.Length > Mb_1) // No ejecutar nada si tiene mas de 1 Mb Y MOSTAR ERRORES
-                {
-                    if (errors.Any()) // Si hay errores y imagen mayor a 1MB
-                    {
-                        foreach (var error in errors)
-                        {
-                            ModelState.AddModelError("", error);
-                        }
-                        TempData["MensajeError"] = "Solo se permite imagenes de 1 Mb.";
-                        ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Name", user.RolId);
-                        return View(user);
-                    }
-                    else // Si Imagen es mayor a 1MB
-                    {
-                        TempData["MensajeError"] = "Solo se permite imagenes de 1 Mb.";
-                        ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Name", user.RolId);
-                        return View(user);
-                    }
-
-                }
-                else
-                {
-                    if (Image != null && Image.Length > 0)
-                    {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await Image.CopyToAsync(memoryStream);
-                            user.Image = memoryStream.ToArray();
-                        }
-
-                        if (errors.Any()) // Si Hay Un Error Mando A La Vista
-                        {
-                            foreach (var error in errors)
-                            {
-                                ModelState.AddModelError("", error);
-                            }
-                            ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Name", user.RolId);
-                            return View(user);
-                        }
-
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        if (errors.Any()) // Si Hay Un Error Mando A La Vista
-                        {
-                            foreach (var error in errors)
-                            {
-                                ModelState.AddModelError("", error);
-                            }
-                            ViewData["RolId"] = new SelectList(_context.Rols, "Id", "Name", user.RolId);
-                            return View(user);
-                        }
-
                         var UserFind = await _context.Users.FirstOrDefaultAsync(s => s.Id == user.Id);
-                        if (UserFind?.Image?.Length > 0)
-                            user.Image = UserFind.Image;
-                        UserFind.UserName = user.UserName;
-                        UserFind.RolId = user.RolId;
-                        UserFind.Email = user.Email;
-                        UserFind.Status = user.Status;
 
                         var contra = UserFind.Password;
                         if (contra == user.Password)
@@ -490,9 +425,6 @@ namespace LLVGFJCOJDMR.Controllers
 
                         _context.Update(UserFind);
                         await _context.SaveChangesAsync();
-                    }
-
-                }
 
             }
             catch (DbUpdateConcurrencyException)
