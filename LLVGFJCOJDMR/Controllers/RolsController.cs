@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LLVGFJCOJDMR.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public class RolsController : Controller
     {
         private readonly ApplicationDbContext _context;

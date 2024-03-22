@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace LLVGFJCOJDMR.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador, Gerente")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
