@@ -1,0 +1,89 @@
+﻿@model LLVGFJCOJDMR.Models.User
+@{
+    Layout = "_LoginLayout";
+}
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center" style="margin-top: 150px;">
+        <div class="col-md-6">
+            <div class="card" style="border-radius: 20px;">
+                <div class="card-header" style="border-radius: 20px 20px 0 0;">
+                    <h1 class="card-text text-center">Iniciar Sesión</h1>
+                </div>
+                <div class="card-body row">
+                    <form asp-action="Login">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label">Email</label>
+                            <input asp-for="Email" class="form-control" style="border-radius: 30px;" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label">Contraseña</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" class="form-control" style="border-radius: 30px;" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline" id="togglePassword" style="border:0px;">
+                                        <svg id="eyeIconClosed" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path></svg>
+                                        <svg id="eyeIconOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:; display:none;"><path d="M17 8V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2H9V7c0-1.654 1.346-3 3-3s3 1.346 3 3v1h2z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-md-4"></div>
+                                <div class="form-group col-md-4">
+                                    <button type="submit" class="btn btn-primary" style="border-radius: 30px; width:100%;">Iniciar</button>
+                                    <span>@ViewBag.Error</span>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            var passwordInput = document.getElementById("Password");
+            var eyeIconClosed = document.getElementById("eyeIconClosed");
+            var eyeIconOpen = document.getElementById("eyeIconOpen");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIconClosed.style.display = "none";
+                eyeIconOpen.style.display = "inline";
+            } else {
+                passwordInput.type = "password";
+                eyeIconClosed.style.display = "inline";
+                eyeIconOpen.style.display = "none";
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Estilos específicos para dispositivos móviles */
+    @@ media screen and (max-width: 768px) {
+        .card {
+            border-radius: 20px;
+        }
+
+        .card-header {
+            border-radius: 20px 20px 0 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            border-radius: 30px;
+        }
+    }
+</style>

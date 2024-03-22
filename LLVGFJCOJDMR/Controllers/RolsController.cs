@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LLVGFJCOJDMR.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LLVGFJCOJDMR.Controllers
 {
+    [Authorize]
     public class RolsController : Controller
     {
         private readonly ApplicationDbContext _context;
