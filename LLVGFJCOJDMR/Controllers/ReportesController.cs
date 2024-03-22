@@ -6,9 +6,11 @@ using Rotativa.AspNetCore;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LLVGFJCOJDMR.Controllers
 {
+    [Authorize(Roles = "Administrador, Gerente")]
     public class ReportesController : Controller
     {
 
