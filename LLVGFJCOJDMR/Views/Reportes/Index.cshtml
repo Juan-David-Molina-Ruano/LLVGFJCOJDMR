@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Reportes";
+}
+
+<div class="row">
+    <div class="card">
+        <form asp-controller="Reportes" asp-action="GenerarReporte" method="post">
+            <div class="card-header row">
+                <h1 class="card-text col-md-12">Reporte de clientes</h1>
+            </div>
+            <div class="table-responsive col-md-12">
+                <div class="card-body row">
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Nombre</label>
+                            <input type="text" class="form-control" name="firstName" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Apellidos</label>
+                            <input type="text" class="form-control" name="lastName" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Opciones: </label>
+                            <select class="form-control" name="opcion">
+                                <option value="PDF">PDF</option>
+                                <option value="EXCEL">EXCEL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <input style="width:100%; margin-top:10px;" type="submit" value="Generar Reporte" class="btn btn-warning" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
