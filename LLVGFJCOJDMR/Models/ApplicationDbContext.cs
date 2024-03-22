@@ -21,9 +21,11 @@ namespace LLVGFJCOJDMR.Models
                 .OnDelete(DeleteBehavior.Cascade);
 
             //insertar datos inicales a la tabla rols
-            //modelBuilder.Entity<Rol>().HasData(new Rol { Id = 1, Name = "Admin", Description = "soy admin" });
+            modelBuilder.Entity<Rol>().HasData(new Rol { Id = 1, Name = "Administrador", Description = "soy admin" });
+            modelBuilder.Entity<Rol>().HasData(new Rol { Id = 2, Name = "Empleado", Description = "soy empleado" });
+            modelBuilder.Entity<Rol>().HasData(new Rol { Id = 3, Name = "Gerente", Description = "soy gerente" });
 
-            //modelBuilder.Entity<User>().HasData(new User { Id = 1, Username = "Root", RolId = 1, Password = "e10adc3949ba59abbe56e057f20f883e" });
+            modelBuilder.Entity<User>().HasData(new User { Id = 1, UserName = "Root", RolId = 1, Password = "be4c75f3853a9f55a0b27fbaeb1a0dde", Email = "root@gmail.com", Status = 1, Image = null });
         }
 
     }
