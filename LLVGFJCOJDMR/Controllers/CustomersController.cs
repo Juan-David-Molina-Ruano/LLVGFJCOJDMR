@@ -21,10 +21,26 @@ namespace LLVGFJCOJDMR.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Customer customer)
         {
-            return _context.Customers != null ?
-                        View(await _context.Customers.ToListAsync()) :
+            var query = _context.Customers.AsQueryable();
+            if (string.IsNullOrWhiteSpace(customer.FirstName) == false)
+            {
+                query = query.Where(s => s.FirstName.Contains(customer.FirstName));
+            }
+            if (string.IsNullOrWhiteSpace(customer.LastName) == false)
+            {
+                query = query.Where(s => s.LastName.Contains(customer.LastName));
+            }
+            if (string.IsNullOrWhiteSpace(customer.Email) == false)
+            {
+                query = query.Where(s => s.Email.Contains(customer.Email));
+            }
+            if (customer.Take == 0)
+                customer.Take = 10;
+            query = query.Take(customer.Take);
+            return query != null ?
+                          View(await query.ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
         }
 
