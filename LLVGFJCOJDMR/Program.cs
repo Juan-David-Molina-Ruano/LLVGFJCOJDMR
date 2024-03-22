@@ -30,6 +30,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+IWebHostEnvironment env = app.Environment;
+Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, "../wwwroot/Rotativa");
+app.UseStaticFiles();
+
 app.UseStaticFiles();
 
 app.UseRouting();
