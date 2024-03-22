@@ -1,0 +1,98 @@
+﻿@model List<Customer>
+@{
+    Layout = null;
+}
+<style>
+    /* Estilos para la tabla principal */
+    .table-main {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+        .table-main th,
+        .table-main td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada */
+            font-size: 14px; /* Tamaño del texto */
+        }
+
+        .table-main th {
+            background-color: #4CAF50; /* Color de fondo verde para las cabeceras de la tabla principal */
+            color: white; /* Color de texto blanco para las cabeceras de la tabla principal */
+        }
+
+    /* Estilos para las tablas anidadas */
+    .nested-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px; /* Espacio adicional entre las tablas anidadas */
+    }
+
+        .nested-table th,
+        .nested-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada */
+            font-size: 14px; /* Tamaño del texto */
+        }
+
+        .nested-table th {
+            background-color: #2196F3; /* Color de fondo azul para las cabeceras de la tabla anidada */
+            color: white; /* Color de texto blanco para las cabeceras de la tabla anidada */
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                @foreach (var item in Model)
+                {
+                    <table class="table-main">
+                        <thead>
+
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            <tr>
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                <td>@item.Email</td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <table class="nested-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Numero Telefonico</th>
+                                                <th>Nota</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var detalle in item.PhoneNumbers)
+                                            {
+                                                <tr>
+                                                    <td>@detalle.NumberPhone</td>
+                                                    <td>@detalle.Note</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

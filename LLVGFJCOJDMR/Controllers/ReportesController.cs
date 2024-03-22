@@ -43,17 +43,21 @@ namespace LLVGFJCOJDMR.Controllers
                     {
                         ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Reportes");
                         worksheet.Column(1).Width = 20;
-                        worksheet.Column(2).Width = 20; // Establecer el ancho de la columna B en 30
-                        worksheet.Column(3).Width = 30; // Establecer el ancho de la columna C en 30
-                        worksheet.Column(4).Width = 10; // Establecer el ancho de la columna D en 30
-                        worksheet.Column(5).Width = 25; // Establecer el ancho de la columna E en 30
-                        
+                        worksheet.Column(2).Width = 20;
+                        worksheet.Column(3).Width = 30;
+                        worksheet.Column(4).Width = 10;
+                        worksheet.Column(5).Width = 25;
+
+                        // Establecer colores de fondo para los encabezados
+                        worksheet.Cells["A1:C1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells["A1:C1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+
 
                         worksheet.Cells["A1"].Value = "Nombre";
                         worksheet.Cells["B1"].Value = "Apellido";
                         worksheet.Cells["C1"].Value = "Email";
-                        
-                
+                        worksheet.Cells["D1"].Value = "Número de Teléfono";
+                        worksheet.Cells["E1"].Value = "Nota";
 
                         int fila = 2;
                         foreach (var item in customers)
@@ -67,43 +71,41 @@ namespace LLVGFJCOJDMR.Controllers
                             columna = 3;
                             worksheet.Cells[fila, columna].Value = item.Email;
 
+                            // Agregar números de teléfono y notas debajo del cliente actual
                             foreach (var item1 in item.PhoneNumbers)
                             {
-                              
+                                fila++;
 
                                 columna = 4;
                                 worksheet.Cells[fila, columna].Value = item1.NumberPhone;
 
                                 columna = 5;
                                 worksheet.Cells[fila, columna].Value = item1.Note;
-
-                                
                             }
 
-                            fila++;
-
-                            int lastRow = worksheet.Dimension.End.Row;
-
-                            // Obtener el rango de celdas que deseas aplicar el borde
-                            ExcelRange range1 = worksheet.Cells[1, 1, lastRow, 6];
-
-                            // Aplicar bordes
-                            range1.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            range1.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                            range1.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            range1.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            fila++; // Saltar a la siguiente fila para el próximo cliente
                         }
-                        var range = worksheet.Cells["A1:I" + fila];
 
-                        // Agregar un filtro a ese rango
-                        range.AutoFilter = true;
+                        int lastRow = worksheet.Dimension.End.Row;
+
+                        // Obtener el rango de celdas para aplicar bordes a todos los datos
+                        ExcelRange range1 = worksheet.Cells[1, 1, lastRow, 5];
+                        range1.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        range1.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        range1.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        range1.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        // Obtener el rango de celdas que deseas aplicar el filtro (solo para los encabezados de clientes)
+                        ExcelRange range2 = worksheet.Cells["A1:C1"];
+                        range2.AutoFilter = true;
 
                         byte[]? filecontents = package.GetAsByteArray();
 
                         return File(filecontents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reporte de Clientes.xlsx");
-
                     }
-                    
+
+
+
                 }
                 else
                 {
