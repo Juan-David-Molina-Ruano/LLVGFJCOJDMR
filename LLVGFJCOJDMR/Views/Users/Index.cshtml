@@ -1,78 +1,100 @@
 ﻿@model IEnumerable<LLVGFJCOJDMR.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Usuarios";
 }
 
-<h1>Index</h1>
+<div class="row">
+    <div class="card">
+        <div class="card-header row">
+            <h1 class="card-text col-md-12">Usuarios</h1>
+        </div>
+        <div class="card-body row">
+            <p class="col-md-12">
+                <a class="btn btn-success" style="width:100%;" asp-action="Create">Crear</a>
+            </p>
+            <div class="col-md-12 table-responsive">
+                <table class="table table-secondary table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Image)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UserName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Rol)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        string urlBase64 = "";
+                                        if (item.Image != null && item.Image.Length > 0)
+                                        {
+                                            string base64String = Convert.ToBase64String(item.Image);
+                                            urlBase64 = "data:image/jpeg;base64," + base64String;
+                                            <img src="@urlBase64" width="80px" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/img/default.jpg" width="80px" />
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        @Html.Raw("Activo")
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("Inactivo")
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Rol.Name)
+                                </td>
+                                <td>
+                                    <table>
+                                        <td>
+                                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
 
-<p>
-    <a asp-action="Create">Crear</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rol)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    @{
-                        string urlBase64 = "";
-                        if (item.Image != null && item.Image.Length > 0)
-                        {
-                            string base64String = Convert.ToBase64String(item.Image);
-                            urlBase64 = "data:image/jpeg;base64," + base64String;
-                            <img src="@urlBase64" width="80px" />
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <img src="~/img/default.jpg" width="80px" />
-                        }
-                    }
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-                <td>
-                    @if (item.Status == 1)
-                    {
-                        @Html.Raw("Activo")
-                    }
-                    else
-                    {
-                        @Html.Raw("Inactivo")
-                    }
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rol.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
