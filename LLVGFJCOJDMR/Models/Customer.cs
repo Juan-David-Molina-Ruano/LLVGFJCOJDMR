@@ -32,7 +32,7 @@ namespace LLVGFJCOJDMR.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [EmailAddress(ErrorMessage = "El campo {0} no es una dirección de correo válida")]
-        [Display(Name = "Correo")]
+        
         public string Email { get; set; }
 
         [NotMapped]//propiedadad para filtro

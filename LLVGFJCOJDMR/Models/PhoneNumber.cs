@@ -15,11 +15,13 @@ namespace LLVGFJCOJDMR.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [StringLength(20, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "El campo {0} solo puede contener números")]
+        [Display(Name ="Numero de Telefono")]
         public string NumberPhone { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [StringLength(100, ErrorMessage = "El campo {0} no puede tener mas de {1} caracteres")]
         [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "El campo {0} solo puede contener letras")]
+        [Display(Name ="Nota")]
         public string Note { get; set; }
 
     }
